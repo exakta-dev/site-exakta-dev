@@ -1,0 +1,1654 @@
+<html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exakta Dev | IA e Engenharia de Precisão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/"
+        }
+    }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-heading {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .font-mono-tech {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Subtle Glows and Gradients */
+        .hero-gradient {
+            background: radial-gradient(ellipse 120% 100% at 0% 0%, rgba(198,255,0,0.18) 0%, rgba(198,255,0,0.07) 30%, #0A0A0A 70%);
+        }
+        .cta-gradient {
+            background: radial-gradient(circle at 50% 100%, #132F29 0%, #0A0A0A 80%);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #132F29; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1E4D3F; 
+        }
+
+        #hero-3d-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        @property --grid-reveal {
+            syntax: '<percentage>';
+            initial-value: 85%;
+            inherits: false;
+        }
+        @keyframes gridPulseReveal {
+            0%, 100% { --grid-reveal: 85%; opacity: 0.3; }
+            50% { --grid-reveal: 55%; opacity: 0.7; }
+        }
+        .red-grid-vignette {
+            background-image:
+                linear-gradient(to right, rgba(255, 40, 40, 0.8) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 40, 40, 0.8) 1px, transparent 1px);
+            background-size: 4rem 4rem;
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, transparent var(--grid-reveal), rgba(0,0,0,0.35) 100%);
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, transparent var(--grid-reveal), rgba(0,0,0,0.35) 100%);
+            filter: drop-shadow(0 0 4px rgba(255, 40, 40, 1)) drop-shadow(0 0 12px rgba(255, 20, 20, 0.7)) drop-shadow(0 0 30px rgba(200, 0, 0, 0.4));
+            animation: gridPulseReveal 4s ease-in-out infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+
+        /* Immersive Scroll */
+        .immersive-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .immersive-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #0A0A0A;
+            will-change: opacity;
+        }
+
+        /* Typing animation */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .typing-cursor::after {
+            content: '|';
+            color: #C6FF00;
+            font-weight: 300;
+            animation: blink 0.7s step-end infinite;
+            margin-left: 2px;
+        }
+        .typing-cursor.typing-active::after {
+            animation: none;
+            opacity: 1;
+        }
+        #problem-section .typing-cursor::after {
+            color: #FF3333;
+        }
+
+        /* Active card states (replaces hover) */
+        .problem-card.active {
+            border-color: rgba(255, 51, 51, 0.3);
+        }
+        .problem-card.active .problem-card-icon {
+            border-color: rgba(255, 51, 51, 0.5);
+        }
+        .problem-card.active .problem-card-iconify {
+            color: #FF3333;
+        }
+        .solution-card.active {
+            border-color: rgba(198, 255, 0, 0.4);
+            box-shadow: 0 0 30px rgba(198, 255, 0, 0.08);
+        }
+        .solution-card.active .solution-card-icon {
+            border-color: rgba(198, 255, 0, 0.5);
+        }
+
+        /* Laser beam canvas container */
+        #laser-beam-canvas {
+            image-rendering: auto;
+        }
+
+        /* Problem Section - Horizontal Card Carousel */
+        #problem-section {
+            position: relative;
+        }
+        .problem-card,
+        .solution-card {
+            will-change: transform, opacity;
+            transform-origin: center center;
+        }
+        @media (min-width: 1024px) {
+            .problem-card {
+                min-height: 320px;
+                display: flex;
+                flex-direction: column;
+            }
+            .problem-card p:last-child {
+                margin-top: auto;
+            }
+        }
+        @media (max-width: 1023px) {
+            #problem-cards-viewport {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            #problem-cards-viewport::-webkit-scrollbar {
+                display: none;
+            }
+            .problem-card {
+                scroll-snap-align: start;
+            }
+        }
+
+    </style>
+</head>
+<body class="bg-[#0A0A0A] text-[#EAEAEA] antialiased selection:bg-[#C6FF00] selection:text-[#0A0A0A]">
+
+    <!-- 1. HEADER -->
+    <header class="fixed top-0 w-full z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="font-heading font-semibold text-xl tracking-tighter text-white flex items-center gap-2">
+                EXAKTA
+                <span class="w-1.5 h-1.5 bg-[#C6FF00] rounded-full shadow-[0_0_8px_#C6FF00]"></span>
+            </a>
+            
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                <a href="#solucoes" class="hover:text-white transition-colors">Soluções</a>
+                <a href="#cases" class="hover:text-white transition-colors">Cases</a>
+                <a href="#sobre" class="hover:text-white transition-colors">Sobre</a>
+                <a href="#contato" class="hover:text-white transition-colors">Contato</a>
+            </nav>
+
+            <a href="#contato" class="hidden md:inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-[#0A0A0A] bg-[#C6FF00] rounded-[12px] hover:shadow-[0_0_20px_rgba(198,255,0,0.3)] transition-all duration-300">
+                Falar com Especialista em IA
+            </a>
+
+            <button class="md:hidden text-white">
+                <iconify-icon icon="solar:hamburger-menu-linear" width="24" height="24"></iconify-icon>
+            </button>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION -->
+    <section class="relative min-h-screen overflow-hidden hero-gradient flex flex-col">
+        <!-- Tech Grid Background -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10 flex-1 flex flex-col pt-28 lg:pt-32 pb-8">
+            <div class="flex-1 flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-16">
+                <!-- Left: Text Content -->
+                <div class="flex-1 text-center lg:text-left">
+                    <span class="text-[#C6FF00] font-mono-tech text-xs tracking-widest uppercase mb-6 block animate-fade-up">&lt;EnterpriseIntelligence /&gt;</span>
+                    
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-semibold tracking-tighter text-white leading-[1.1] animate-fade-up delay-100">
+                        Inteligência Artificial aplicada para escalar negócios com <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#C6FF00] to-white/80">precisão.</span>
+                    </h1>
+                    
+                    <p class="mt-5 text-base md:text-lg text-gray-400 max-w-xl leading-relaxed animate-fade-up delay-200">
+                        Na Exakta Dev desenvolvemos soluções com IA, automações inteligentes e arquiteturas escaláveis que transformam dados e processos em vantagem competitiva real.
+                    </p>
+                    
+                    <div class="mt-8 flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 animate-fade-up delay-300">
+                        <a href="#contato" class="w-full sm:w-auto px-6 py-3 text-sm font-medium text-[#0A0A0A] bg-[#C6FF00] rounded-[12px] hover:shadow-[0_0_25px_rgba(198,255,0,0.4)] transition-all duration-300 flex items-center justify-center gap-2">
+                            Iniciar Projeto com IA
+                            <iconify-icon icon="solar:arrow-right-linear" width="18"></iconify-icon>
+                        </a>
+                        <a href="#cases" class="w-full sm:w-auto px-6 py-3 text-sm font-medium text-[#C6FF00] border border-[#C6FF00]/30 rounded-[12px] hover:bg-[#C6FF00]/5 transition-all duration-300 flex items-center justify-center gap-2">
+                            Ver Cases
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: 3D Model -->
+                <div class="flex-1 flex items-center justify-center">
+                    <div id="hero-3d-container" class="w-full aspect-square max-w-[500px] lg:max-w-none"></div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="mt-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 pt-6 border-t border-white/5 animate-fade-up delay-300">
+                <div class="text-left flex items-start gap-3">
+                    <iconify-icon icon="solar:cpu-linear" width="20" class="text-[#C6FF00] mt-0.5"></iconify-icon>
+                    <span class="text-xs md:text-sm text-gray-400 leading-tight">Soluções personalizadas<br>com IA</span>
+                </div>
+                <div class="text-left flex items-start gap-3">
+                    <iconify-icon icon="solar:server-square-linear" width="20" class="text-[#C6FF00] mt-0.5"></iconify-icon>
+                    <span class="text-xs md:text-sm text-gray-400 leading-tight">Arquitetura escalável<br>e segura</span>
+                </div>
+                <div class="text-left flex items-start gap-3">
+                    <iconify-icon icon="solar:code-circle-linear" width="20" class="text-[#C6FF00] mt-0.5"></iconify-icon>
+                    <span class="text-xs md:text-sm text-gray-400 leading-tight">Integração com<br>sistemas existentes</span>
+                </div>
+                <div class="text-left flex items-start gap-3">
+                    <iconify-icon icon="solar:graph-up-linear" width="20" class="text-[#C6FF00] mt-0.5"></iconify-icon>
+                    <span class="text-xs md:text-sm text-gray-400 leading-tight">Foco em ROI e<br>eficiência operacional</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMMERSIVE SCROLL: Sections 3, 4, 5 -->
+    <div id="immersive-scroll" class="immersive-container">
+
+        <!-- 3. SEÇÃO PROBLEMA - Horizontal Card Carousel -->
+        <section id="problem-section" class="immersive-panel relative" data-panel="0">
+            <!-- Red Pulsing Grid with Vignette -->
+            <div class="absolute inset-0 red-grid-vignette"></div>
+            <div class="max-w-7xl mx-auto px-6 w-full relative z-10">
+                <div class="flex flex-col lg:flex-row lg:items-center gap-12 lg:gap-16">
+
+                    <!-- Left: Fixed Content -->
+                    <div class="lg:w-[35%] flex-shrink-0">
+                        <span class="text-red-400/80 font-mono-tech text-xs tracking-widest uppercase mb-4 block">&lt;SystemFailure /&gt;</span>
+                        <h2 class="text-3xl md:text-4xl lg:text-[2.75rem] font-heading font-semibold tracking-tighter text-white mb-6 leading-[1.1] min-h-[4.5rem] md:min-h-[3.5rem]"
+                            data-typewrite="Sua operação ainda funciona assim?"
+                            aria-label="Sua operação ainda funciona assim?">
+                            <span class="typing-text"></span><span class="typing-cursor"></span>
+                        </h2>
+                        <p class="text-base text-gray-400 leading-relaxed mb-8">
+                            Processos manuais, dados parados e sistemas desconectados. Identifique os gargalos que estão freando o crescimento do seu negócio.
+                        </p>
+
+                        <div class="hidden lg:flex items-center gap-4">
+                            <span id="problem-counter" class="font-mono-tech text-2xl text-[#FF3333]">01</span>
+                            <span class="font-mono-tech text-sm text-gray-600">/ 04</span>
+                            <div id="problem-beam-container" class="flex-1 ml-4 relative overflow-visible" style="height:50px;">
+                                <div id="problem-progress" class="absolute opacity-0 pointer-events-none" style="width:25%;height:0;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Card Carousel -->
+                    <div class="lg:flex-1 overflow-hidden" id="problem-cards-viewport">
+                        <div class="flex gap-6" id="problem-cards-track">
+
+                            <!-- Card 1 -->
+                            <div class="problem-card bg-[#2B0F0F]/50 border border-white/5 rounded-[20px] p-8 lg:p-10 transition-all duration-500 flex-shrink-0">
+                                <div class="flex items-center gap-4 mb-8">
+                                    <div class="w-12 h-12 bg-[#2F1313] rounded-2xl flex items-center justify-center border border-white/5 transition-colors problem-card-icon">
+                                        <iconify-icon icon="solar:settings-minimalistic-linear" width="24" class="text-gray-400 transition-colors problem-card-iconify"></iconify-icon>
+                                    </div>
+                                    <span class="font-mono-tech text-xs text-gray-600">01</span>
+                                </div>
+                                <h3 class="text-xl lg:text-2xl font-heading font-semibold text-white mb-3 tracking-tight">Processos manuais</h3>
+                                <p class="text-sm lg:text-base text-gray-400 leading-relaxed">Operações repetitivas que consomem tempo valioso da sua equipe e geram gargalos operacionais críticos.</p>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="problem-card bg-[#2B0F0F]/50 border border-white/5 rounded-[20px] p-8 lg:p-10 transition-all duration-500 flex-shrink-0">
+                                <div class="flex items-center gap-4 mb-8">
+                                    <div class="w-12 h-12 bg-[#2F1313] rounded-2xl flex items-center justify-center border border-white/5 transition-colors problem-card-icon">
+                                        <iconify-icon icon="solar:database-linear" width="24" class="text-gray-400 transition-colors problem-card-iconify"></iconify-icon>
+                                    </div>
+                                    <span class="font-mono-tech text-xs text-gray-600">02</span>
+                                </div>
+                                <h3 class="text-xl lg:text-2xl font-heading font-semibold text-white mb-3 tracking-tight">Falta de análise</h3>
+                                <p class="text-sm lg:text-base text-gray-400 leading-relaxed">Dados subutilizados que poderiam gerar insights preditivos para decisões estratégicas.</p>
+                            </div>
+
+                            <!-- Card 3 -->
+                            <div class="problem-card bg-[#2B0F0F]/50 border border-white/5 rounded-[20px] p-8 lg:p-10 transition-all duration-500 flex-shrink-0">
+                                <div class="flex items-center gap-4 mb-8">
+                                    <div class="w-12 h-12 bg-[#2F1313] rounded-2xl flex items-center justify-center border border-white/5 transition-colors problem-card-icon">
+                                        <iconify-icon icon="solar:clock-circle-linear" width="24" class="text-gray-400 transition-colors problem-card-iconify"></iconify-icon>
+                                    </div>
+                                    <span class="font-mono-tech text-xs text-gray-600">03</span>
+                                </div>
+                                <h3 class="text-xl lg:text-2xl font-heading font-semibold text-white mb-3 tracking-tight">Atendimento lento</h3>
+                                <p class="text-sm lg:text-base text-gray-400 leading-relaxed">Suporte incapaz de escalar em tempo real, afetando a experiência do cliente final.</p>
+                            </div>
+
+                            <!-- Card 4 -->
+                            <div class="problem-card bg-[#2B0F0F]/50 border border-white/5 rounded-[20px] p-8 lg:p-10 transition-all duration-500 flex-shrink-0">
+                                <div class="flex items-center gap-4 mb-8">
+                                    <div class="w-12 h-12 bg-[#2F1313] rounded-2xl flex items-center justify-center border border-white/5 transition-colors problem-card-icon">
+                                        <iconify-icon icon="solar:usb-circle-linear" width="24" class="text-gray-400 transition-colors problem-card-iconify"></iconify-icon>
+                                    </div>
+                                    <span class="font-mono-tech text-xs text-gray-600">04</span>
+                                </div>
+                                <h3 class="text-xl lg:text-2xl font-heading font-semibold text-white mb-3 tracking-tight">Sistemas isolados</h3>
+                                <p class="text-sm lg:text-base text-gray-400 leading-relaxed">Arquiteturas fragmentadas que dificultam o fluxo de informações e automações complexas.</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. SEÇÃO SOLUÇÃO -->
+        <section class="immersive-panel py-24" data-panel="1">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-16">
+                <span class="text-[#C6FF00] font-mono-tech text-xs tracking-widest uppercase mb-4 block">&lt;SmartSolution /&gt;</span>
+                <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white max-w-3xl min-h-[3.5rem] md:min-h-[4.5rem]"
+                    data-typewrite="Para cada gargalo, uma solução com inteligência aplicada."
+                    aria-label="Para cada gargalo, uma solução com inteligência aplicada.">
+                    <span class="typing-text"></span><span class="typing-cursor"></span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="solution-card bg-[#0F2B26]/50 border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-[#C6FF00] opacity-[0.03] blur-[40px] rounded-full"></div>
+                    <div class="w-12 h-12 bg-[#132F29] rounded-2xl flex items-center justify-center mb-6 border border-[#C6FF00]/20 transition-colors solution-card-icon">
+                        <iconify-icon icon="solar:bolt-circle-linear" width="24" class="text-[#C6FF00]"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg font-heading font-semibold text-white mb-2 tracking-tight">Automação inteligente</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Workflows automatizados com IA que eliminam tarefas repetitivas, liberando sua equipe para o que gera valor.</p>
+                </div>
+
+                <div class="solution-card bg-[#0F2B26]/50 border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-[#C6FF00] opacity-[0.03] blur-[40px] rounded-full"></div>
+                    <div class="w-12 h-12 bg-[#132F29] rounded-2xl flex items-center justify-center mb-6 border border-[#C6FF00]/20 transition-colors solution-card-icon">
+                        <iconify-icon icon="solar:graph-up-linear" width="24" class="text-[#C6FF00]"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg font-heading font-semibold text-white mb-2 tracking-tight">Insights preditivos</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Pipelines de dados e modelos de IA que transformam informação bruta em decisões estratégicas em tempo real.</p>
+                </div>
+
+                <div class="solution-card bg-[#0F2B26]/50 border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-[#C6FF00] opacity-[0.03] blur-[40px] rounded-full"></div>
+                    <div class="w-12 h-12 bg-[#132F29] rounded-2xl flex items-center justify-center mb-6 border border-[#C6FF00]/20 transition-colors solution-card-icon">
+                        <iconify-icon icon="solar:chat-round-dots-linear" width="24" class="text-[#C6FF00]"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg font-heading font-semibold text-white mb-2 tracking-tight">Atendimento escalável com IA</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Agentes virtuais contextuais que escalam seu suporte 24/7 sem perder qualidade na experiência do cliente.</p>
+                </div>
+
+                <div class="solution-card bg-[#0F2B26]/50 border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-[#C6FF00] opacity-[0.03] blur-[40px] rounded-full"></div>
+                    <div class="w-12 h-12 bg-[#132F29] rounded-2xl flex items-center justify-center mb-6 border border-[#C6FF00]/20 transition-colors solution-card-icon">
+                        <iconify-icon icon="solar:link-round-linear" width="24" class="text-[#C6FF00]"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg font-heading font-semibold text-white mb-2 tracking-tight">Integração unificada</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Arquiteturas modernas com APIs e microsserviços que conectam todo seu ecossistema digital em um fluxo contínuo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- 5. METODOLOGIA -->
+        <section class="immersive-panel py-24" data-panel="2">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-16">
+                <span class="text-[#C6FF00] font-mono-tech text-xs tracking-widest uppercase mb-4 block">&lt;PrecisionProcess /&gt;</span>
+                <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white min-h-[3.5rem] md:min-h-[4.5rem]"
+                    data-typewrite="Como transformamos desafios em resultados — com engenharia de precisão."
+                    aria-label="Como transformamos desafios em resultados — com engenharia de precisão.">
+                    <span class="typing-text"></span><span class="typing-cursor"></span>
+                </h2>
+            </div>
+
+            <div class="relative">
+                <!-- Laser beam connector for desktop -->
+                <div id="methodology-old-line" class="hidden lg:block absolute top-[28px] left-[28px] right-[28px] h-px bg-white/10 z-0"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-6 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="relative">
+                        <div class="w-14 h-14 bg-[#0A0A0A] border-2 border-[#1E4D3F] rounded-2xl flex items-center justify-center mb-6 text-[#C6FF00] font-mono-tech text-lg shadow-[0_0_15px_rgba(198,255,0,0.05)]">
+                            01
+                        </div>
+                        <h4 class="text-lg font-heading font-semibold text-white mb-3 tracking-tight">Diagnóstico Estratégico</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Mapeamento profundo da sua infraestrutura de dados e identificação de gargalos operacionais.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative">
+                        <div class="w-14 h-14 bg-[#0A0A0A] border-2 border-[#1E4D3F] rounded-2xl flex items-center justify-center mb-6 text-[#C6FF00] font-mono-tech text-lg shadow-[0_0_15px_rgba(198,255,0,0.05)]">
+                            02
+                        </div>
+                        <h4 class="text-lg font-heading font-semibold text-white mb-3 tracking-tight">Arquitetura Inteligente</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Design da solução focado em escalabilidade, segurança e integração fluida com sistemas legados.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative">
+                        <div class="w-14 h-14 bg-[#0A0A0A] border-2 border-[#1E4D3F] rounded-2xl flex items-center justify-center mb-6 text-[#C6FF00] font-mono-tech text-lg shadow-[0_0_15px_rgba(198,255,0,0.05)]">
+                            03
+                        </div>
+                        <h4 class="text-lg font-heading font-semibold text-white mb-3 tracking-tight">Desenvolvimento e Treinamento</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Codificação de precisão e treinamento de modelos de IA com dados específicos do seu negócio.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative">
+                        <div class="w-14 h-14 bg-[#0A0A0A] border-2 border-[#1E4D3F] rounded-2xl flex items-center justify-center mb-6 text-[#C6FF00] font-mono-tech text-lg shadow-[0_0_15px_rgba(198,255,0,0.05)]">
+                            04
+                        </div>
+                        <h4 class="text-lg font-heading font-semibold text-white mb-3 tracking-tight">Implementação e Monitoramento</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Deploy em produção com métricas em tempo real, garantindo performance e melhoria contínua.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </div>
+    <!-- /IMMERSIVE SCROLL -->
+
+    <!-- 6. SERVIÇOS -->
+    <section id="solucoes" class="py-24 bg-[#0C1412] border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white max-w-2xl mb-16">
+                O que entregamos: IA aplicada em cada frente do seu negócio
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Service 1 -->
+                <div class="bg-[#0A0A0A] border border-white/5 rounded-[20px] p-8 hover:-translate-y-1 hover:border-[#C6FF00]/40 hover:shadow-[0_10px_40px_rgba(198,255,0,0.08)] transition-all duration-300">
+                    <iconify-icon icon="solar:code-square-linear" width="32" class="text-[#C6FF00] mb-6"></iconify-icon>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3 tracking-tight">Desenvolvimento de Soluções com IA</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Sistemas core customizados que incorporam machine learning e NLP para resolver problemas específicos do seu setor.</p>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-[#0A0A0A] border border-white/5 rounded-[20px] p-8 hover:-translate-y-1 hover:border-[#C6FF00]/40 hover:shadow-[0_10px_40px_rgba(198,255,0,0.08)] transition-all duration-300">
+                    <iconify-icon icon="solar:chat-round-line-linear" width="32" class="text-[#C6FF00] mb-6"></iconify-icon>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3 tracking-tight">Chatbots Inteligentes de Atendimento</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Agentes virtuais contextuais que reduzem custos de suporte e escalam o atendimento ao cliente com linguagem natural.</p>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-[#0A0A0A] border border-white/5 rounded-[20px] p-8 hover:-translate-y-1 hover:border-[#C6FF00]/40 hover:shadow-[0_10px_40px_rgba(198,255,0,0.08)] transition-all duration-300">
+                    <iconify-icon icon="solar:chart-square-linear" width="32" class="text-[#C6FF00] mb-6"></iconify-icon>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3 tracking-tight">Análise de Dados e Inteligência</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Pipelines de dados estruturados e dashboards preditivos para transformar big data em decisões acionáveis.</p>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="bg-[#0A0A0A] border border-white/5 rounded-[20px] p-8 hover:-translate-y-1 hover:border-[#C6FF00]/40 hover:shadow-[0_10px_40px_rgba(198,255,0,0.08)] transition-all duration-300 lg:col-span-2">
+                    <iconify-icon icon="solar:network-linear" width="32" class="text-[#C6FF00] mb-6"></iconify-icon>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3 tracking-tight">Arquitetura e Integração de Sistemas</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed max-w-2xl">Modernização de infraestrutura através de APIs robustas e microsserviços. Conectamos seu ecossistema digital garantindo alta disponibilidade, latência mínima e fluxo de dados contínuo entre plataformas legadas e novas tecnologias.</p>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="bg-[#0A0A0A] border border-white/5 rounded-[20px] p-8 hover:-translate-y-1 hover:border-[#C6FF00]/40 hover:shadow-[0_10px_40px_rgba(198,255,0,0.08)] transition-all duration-300 bg-gradient-to-br from-[#0A0A0A] to-[#132F29]/40 border-[#C6FF00]/20 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-[#C6FF00] opacity-5 blur-[60px] rounded-full"></div>
+                    <iconify-icon icon="solar:users-group-two-rounded-linear" width="32" class="text-[#C6FF00] mb-6"></iconify-icon>
+                    <h3 class="text-xl font-heading font-semibold text-white mb-3 tracking-tight">Squads Especializadas em IA</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Engenheiros, cientistas de dados e arquitetos dedicados à aceleração tecnológica da sua empresa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. CASES -->
+    <section id="cases" class="py-24 bg-[#0A0A0A] border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white max-w-2xl mb-16">
+                IA aplicada com resultados mensuráveis
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Case 1 -->
+                <div class="bg-[#0F2B26] border border-[#1E4D3F]/50 rounded-[24px] p-10 flex flex-col justify-between">
+                    <div>
+                        <div class="mb-8">
+                            <span class="text-xs font-mono-tech text-gray-400 mb-2 block">Fintech Sec</span>
+                            <h3 class="text-2xl font-heading font-semibold text-white tracking-tight">Detecção de Fraudes em Tempo Real</h3>
+                        </div>
+                        
+                        <div class="space-y-6 mb-10">
+                            <div>
+                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Problema</h4>
+                                <p class="text-sm text-gray-300">Alto índice de falsos positivos bloqueando transações legítimas e perdas financeiras por lentidão na análise.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Solução Exakta</h4>
+                                <p class="text-sm text-gray-300">Implementação de modelo preditivo com machine learning integrado via API, avaliando mais de 200 variáveis em milissegundos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-8 border-t border-white/10 flex items-end justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">Aumento na precisão</p>
+                            <p class="text-5xl font-heading font-semibold text-[#C6FF00] tracking-tighter drop-shadow-[0_0_15px_rgba(198,255,0,0.3)]">94%</p>
+                        </div>
+                        <iconify-icon icon="solar:arrow-right-up-linear" width="32" class="text-gray-500"></iconify-icon>
+                    </div>
+                </div>
+
+                <!-- Case 2 -->
+                <div class="bg-[#0F2B26] border border-[#1E4D3F]/50 rounded-[24px] p-10 flex flex-col justify-between">
+                    <div>
+                        <div class="mb-8">
+                            <span class="text-xs font-mono-tech text-gray-400 mb-2 block">Logística Corp</span>
+                            <h3 class="text-2xl font-heading font-semibold text-white tracking-tight">Otimização Dinâmica de Rotas</h3>
+                        </div>
+                        
+                        <div class="space-y-6 mb-10">
+                            <div>
+                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Problema</h4>
+                                <p class="text-sm text-gray-300">Custos operacionais elevados devido a rotas ineficientes, variabilidade no trânsito e planejamento manual demorado.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Solução Exakta</h4>
+                                <p class="text-sm text-gray-300">Desenvolvimento de algoritmo genético acoplado a IA que recalcula malhas logísticas em tempo real baseado em dados multicanais.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-8 border-t border-white/10 flex items-end justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">Redução de custo logístico</p>
+                            <p class="text-5xl font-heading font-semibold text-[#C6FF00] tracking-tighter drop-shadow-[0_0_15px_rgba(198,255,0,0.3)]">-28%</p>
+                        </div>
+                        <iconify-icon icon="solar:arrow-right-up-linear" width="32" class="text-gray-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. SOBRE A EXAKTA DEV -->
+    <section id="sobre" class="py-24 bg-[#0A0A0A] border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white mb-6">
+                        Tecnologia com precisão estratégica
+                    </h2>
+                    <p class="text-base text-gray-400 leading-relaxed mb-8">
+                        A Exakta Dev não é apenas uma produtora de software. Somos parceiros tecnológicos que entendem que Inteligência Artificial deve servir a um propósito: gerar valor tangível e escalabilidade para o seu negócio.
+                    </p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-[#132F29] flex items-center justify-center shrink-0 mt-0.5">
+                                <iconify-icon icon="solar:check-read-linear" width="14" class="text-[#C6FF00]"></iconify-icon>
+                            </div>
+                            <span class="text-sm text-gray-300"><strong>Engenharia sólida:</strong> Código limpo, testado e arquiteturas preparadas para alta demanda corporativa.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-[#132F29] flex items-center justify-center shrink-0 mt-0.5">
+                                <iconify-icon icon="solar:check-read-linear" width="14" class="text-[#C6FF00]"></iconify-icon>
+                            </div>
+                            <span class="text-sm text-gray-300"><strong>IA aplicada com estratégia:</strong> Não usamos hypes. Implementamos modelos que resolvem dores reais.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-[#132F29] flex items-center justify-center shrink-0 mt-0.5">
+                                <iconify-icon icon="solar:check-read-linear" width="14" class="text-[#C6FF00]"></iconify-icon>
+                            </div>
+                            <span class="text-sm text-gray-300"><strong>Foco em ROI:</strong> Nossos projetos são estruturados para apresentar retorno sobre o investimento em curto a médio prazo.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="relative bg-[#0F2B26] border border-white/5 rounded-[24px] p-8 aspect-square lg:aspect-auto h-full flex flex-col justify-center overflow-hidden">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(198,255,0,0.05)_0%,transparent_70%)]"></div>
+                    
+                    <!-- Abstract Tech Representation -->
+                    <div class="relative z-10 space-y-4">
+                        <div class="h-8 w-3/4 bg-white/5 rounded-md border border-white/10 flex items-center px-4">
+                            <div class="w-2 h-2 rounded-full bg-[#C6FF00] animate-pulse"></div>
+                            <span class="ml-3 text-xs font-mono-tech text-gray-500">Systemizing intelligence...</span>
+                        </div>
+                        <div class="h-8 w-full bg-white/5 rounded-md border border-white/10 flex items-center px-4">
+                            <span class="text-xs font-mono-tech text-[#C6FF00]/50">const <span class="text-white">scaleBusiness</span> = new <span class="text-[#C6FF00]">AI_Architecture()</span>;</span>
+                        </div>
+                        <div class="h-8 w-5/6 bg-white/5 rounded-md border border-white/10 flex items-center px-4">
+                            <span class="text-xs font-mono-tech text-gray-500">Deploying precision models</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. CTA FINAL & 9. CONTATO (COMBINADOS) -->
+    <section id="contato" class="py-24 border-t border-white/5 cta-gradient">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <!-- CTA Text -->
+                <div>
+                    <span class="text-[#C6FF00] font-mono-tech text-xs tracking-widest uppercase mb-4 block">&lt;Init /&gt;</span>
+                    <h2 class="text-4xl md:text-5xl font-heading font-semibold tracking-tighter text-white mb-6 leading-tight">
+                        Pronto para aplicar Inteligência Artificial no seu negócio com estratégia?
+                    </h2>
+                    <p class="text-lg text-gray-400 mb-8">
+                        Agende um diagnóstico estratégico com nossos engenheiros especialistas. Descubra onde a IA pode gerar mais impacto na sua operação.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 text-sm text-gray-300">
+                            <div class="w-10 h-10 rounded-full border border-white/10 bg-[#0A0A0A] flex items-center justify-center">
+                                <iconify-icon icon="solar:letter-linear" width="20" class="text-[#C6FF00]"></iconify-icon>
+                            </div>
+                            contato@exaktadev.com
+                        </div>
+                        <div class="flex items-center gap-4 text-sm text-gray-300">
+                            <div class="w-10 h-10 rounded-full border border-white/10 bg-[#0A0A0A] flex items-center justify-center">
+                                <iconify-icon icon="solar:map-point-linear" width="20" class="text-[#C6FF00]"></iconify-icon>
+                            </div>
+                            São Paulo, SP - Brasil
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="bg-[#0A0A0A] border border-white/10 rounded-[24px] p-8 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                    <form class="space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label class="text-xs font-medium text-gray-400 block">Nome Completo</label>
+                                <input type="text" class="w-full bg-[#132F29]/30 border border-white/10 rounded-[10px] px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C6FF00] focus:ring-1 focus:ring-[#C6FF00] transition-all placeholder-gray-600" placeholder="John Doe">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-medium text-gray-400 block">E-mail Corporativo</label>
+                                <input type="email" class="w-full bg-[#132F29]/30 border border-white/10 rounded-[10px] px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C6FF00] focus:ring-1 focus:ring-[#C6FF00] transition-all placeholder-gray-600" placeholder="john@empresa.com">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label class="text-xs font-medium text-gray-400 block">Empresa</label>
+                                <input type="text" class="w-full bg-[#132F29]/30 border border-white/10 rounded-[10px] px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C6FF00] focus:ring-1 focus:ring-[#C6FF00] transition-all placeholder-gray-600" placeholder="Sua Empresa">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-medium text-gray-400 block">Cargo</label>
+                                <input type="text" class="w-full bg-[#132F29]/30 border border-white/10 rounded-[10px] px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C6FF00] focus:ring-1 focus:ring-[#C6FF00] transition-all placeholder-gray-600" placeholder="CTO, Diretor, etc.">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-medium text-gray-400 block">Descrição do desafio</label>
+                            <textarea rows="4" class="w-full bg-[#132F29]/30 border border-white/10 rounded-[10px] px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C6FF00] focus:ring-1 focus:ring-[#C6FF00] transition-all placeholder-gray-600 resize-none" placeholder="Conte-nos brevemente o problema que deseja resolver com IA..."></textarea>
+                        </div>
+
+                        <button type="button" class="w-full py-4 text-sm font-medium text-[#0A0A0A] bg-[#C6FF00] rounded-[10px] hover:shadow-[0_0_20px_rgba(198,255,0,0.3)] transition-all duration-300 mt-4">
+                            Agendar Diagnóstico Estratégico
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. FOOTER -->
+    <footer class="bg-[#0A0A0A] border-t border-[#C6FF00]/20 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="#" class="font-heading font-semibold text-2xl tracking-tighter text-white flex items-center gap-2 mb-4">
+                        EXAKTA
+                        <span class="w-2 h-2 bg-[#C6FF00] rounded-full shadow-[0_0_8px_#C6FF00]"></span>
+                    </a>
+                    <p class="text-sm text-gray-500 max-w-sm leading-relaxed">
+                        Engenharia de software especializada em Inteligência Artificial para negócios que exigem precisão, performance e escalabilidade estrutural.
+                    </p>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-medium text-sm mb-4">Links Rápidos</h5>
+                    <ul class="space-y-3 text-sm text-gray-500">
+                        <li><a href="#solucoes" class="hover:text-[#C6FF00] transition-colors">Soluções em IA</a></li>
+                        <li><a href="#cases" class="hover:text-[#C6FF00] transition-colors">Cases de Sucesso</a></li>
+                        <li><a href="#sobre" class="hover:text-[#C6FF00] transition-colors">A Empresa</a></li>
+                        <li><a href="#" class="hover:text-[#C6FF00] transition-colors">Metodologia</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-medium text-sm mb-4">Legal</h5>
+                    <ul class="space-y-3 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-white transition-colors">Política de Privacidade</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Termos de Serviço</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Segurança de Dados</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-gray-600">
+                    © 2024 Exakta Dev. Todos os direitos reservados.
+                </p>
+                <div class="flex items-center gap-4 text-gray-500">
+                    <a href="#" class="hover:text-white transition-colors"><iconify-icon icon="solar:laptop-linear" width="20"></iconify-icon></a>
+                    <a href="#" class="hover:text-white transition-colors"><iconify-icon icon="solar:global-linear" width="20"></iconify-icon></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    (function () {
+        var container = document.getElementById('immersive-scroll');
+        if (!container) return;
+
+        var panels = container.querySelectorAll('.immersive-panel');
+        var N = panels.length;
+        if (N < 2) return;
+
+        var current = 0;
+        var animating = false;
+
+        /* ---- Card Carousel (Panel 0) ---- */
+        var track = document.getElementById('problem-cards-track');
+        var viewport = document.getElementById('problem-cards-viewport');
+        var cardsNodeList = track ? track.querySelectorAll('.problem-card') : [];
+        var cards = Array.prototype.slice.call(cardsNodeList);
+        var cN = cards.length;
+        var cIdx = 0;
+        var cAnim = false;
+        var cardW = 0, cGap = 24, cStep = 0;
+        var cCounter = document.getElementById('problem-counter');
+        var cProgressBar = document.getElementById('problem-progress');
+
+        function setActiveCard(list, idx) {
+            for (var i = 0; i < list.length; i++) {
+                if (i === idx) list[i].classList.add('active');
+                else list[i].classList.remove('active');
+            }
+        }
+
+        if (viewport && track && cN > 1 && window.innerWidth >= 1024) {
+            var vpW = viewport.offsetWidth;
+            cardW = Math.min(vpW * 0.78, 480);
+            cStep = cardW + cGap;
+            cards.forEach(function (c) { c.style.width = cardW + 'px'; });
+            gsap.set(cards[0], { scale: 1, opacity: 1 });
+            setActiveCard(cards, 0);
+            for (var ci = 1; ci < cN; ci++) {
+                gsap.set(cards[ci], { scale: 0.88, opacity: 0.4 });
+            }
+        } else if (viewport && track && cN > 1) {
+            cards.forEach(function (c) { c.style.width = '85vw'; c.style.maxWidth = '380px'; });
+        }
+
+        function updateCarouselUI(idx) {
+            if (cCounter) cCounter.textContent = String(idx + 1).padStart(2, '0');
+            if (cProgressBar) cProgressBar.style.width = ((idx + 1) / cN * 100) + '%';
+        }
+
+        function setCarouselInstant(idx) {
+            if (cN < 2 || cStep === 0) return;
+            gsap.set(track, { x: -cStep * idx });
+            for (var ci = 0; ci < cN; ci++) {
+                if (ci === idx) gsap.set(cards[ci], { scale: 1, opacity: 1 });
+                else if (ci < idx) gsap.set(cards[ci], { scale: 0.88, opacity: 0 });
+                else gsap.set(cards[ci], { scale: 0.88, opacity: 0.4 });
+            }
+            setActiveCard(cards, idx);
+            cIdx = idx;
+            updateCarouselUI(idx);
+        }
+
+        function goToCard(idx) {
+            if (idx < 0 || idx >= cN || idx === cIdx || cAnim || cStep === 0) return false;
+            cAnim = true;
+            var prev = cIdx;
+            setActiveCard(cards, idx);
+            var tl = gsap.timeline({
+                onComplete: function () {
+                    cIdx = idx;
+                    cAnim = false;
+                    syncScroll();
+                }
+            });
+            tl.to(track, { x: -cStep * idx, duration: 0.6, ease: 'power2.inOut' }, 0);
+            tl.to(cards[prev], { scale: 0.88, opacity: idx > prev ? 0 : 0.4, duration: 0.6, ease: 'power2.inOut' }, 0);
+            tl.to(cards[idx], { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.inOut' }, 0);
+            updateCarouselUI(idx);
+            return true;
+        }
+
+        /* ---- Solution Card Highlight (Panel 1) ---- */
+        var sCards = Array.prototype.slice.call(
+            panels[1] ? panels[1].querySelectorAll('.solution-card') : []
+        );
+        var sN = sCards.length;
+        var sIdx = -1;
+        var sAnim = false;
+
+        if (sN > 0) {
+            for (var si = 0; si < sN; si++) {
+                gsap.set(sCards[si], { scale: 0.92, opacity: 0.3 });
+            }
+        }
+
+        function setSolutionInstant(idx) {
+            if (sN < 1) return;
+            for (var si = 0; si < sN; si++) {
+                if (si === idx) gsap.set(sCards[si], { scale: 1, opacity: 1 });
+                else gsap.set(sCards[si], { scale: 0.92, opacity: 0.3 });
+            }
+            setActiveCard(sCards, idx);
+            sIdx = idx;
+        }
+
+        function goToSolutionCard(idx) {
+            if (idx < -1 || idx >= sN || idx === sIdx || sAnim) return false;
+            sAnim = true;
+            var prev = sIdx;
+            setActiveCard(sCards, idx);
+            var tl = gsap.timeline({
+                onComplete: function () {
+                    sIdx = idx;
+                    sAnim = false;
+                    syncScroll();
+                }
+            });
+            if (prev >= 0) {
+                tl.to(sCards[prev], { scale: 0.92, opacity: 0.3, duration: 0.5, ease: 'power2.inOut' }, 0);
+            }
+            if (idx >= 0) {
+                tl.to(sCards[idx], { scale: 1, opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 0);
+            }
+            return true;
+        }
+
+        /* ---- Panel Setup ---- */
+        var carouselSteps = cN > 1 ? cN - 1 : 0;
+        var solutionSteps = sN > 0 ? sN : 0;
+        var totalSteps = carouselSteps + solutionSteps + (N - 1);
+
+        for (var i = 0; i < N; i++) {
+            gsap.set(panels[i], { opacity: i === 0 ? 1 : 0 });
+            panels[i].style.zIndex = i === 0 ? 10 : 1;
+            panels[i].style.pointerEvents = i === 0 ? 'auto' : 'none';
+        }
+
+        var pin = ScrollTrigger.create({
+            trigger: container,
+            start: 'top top',
+            end: '+=' + (window.innerHeight * (totalSteps + 1)),
+            pin: true
+        });
+
+        function syncScroll() {
+            var step;
+            if (current === 0) {
+                step = cIdx;
+            } else if (current === 1) {
+                step = carouselSteps + 1 + (sIdx + 1);
+            } else {
+                step = carouselSteps + 1 + solutionSteps + (current - 1);
+            }
+            var p = totalSteps > 0 ? step / totalSteps : 0;
+            pin.scroll(pin.start + p * (pin.end - pin.start));
+        }
+
+        function goTo(index) {
+            if (index < 0 || index >= N || index === current || animating) return;
+            animating = true;
+
+            var from = panels[current];
+            var to = panels[index];
+
+            to.style.zIndex = 10;
+            from.style.zIndex = 5;
+
+            if (index === 0 && cN > 1 && cStep > 0) {
+                setCarouselInstant(cN - 1);
+            }
+            if (index === 1 && sN > 0) {
+                setSolutionInstant(current < 1 ? -1 : sN - 1);
+            }
+
+            var tl = gsap.timeline({
+                onComplete: function () {
+                    from.style.pointerEvents = 'none';
+                    from.style.zIndex = 1;
+                    to.style.pointerEvents = 'auto';
+                    current = index;
+                    animating = false;
+                    syncScroll();
+                }
+            });
+
+            tl.to(from, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 0)
+              .to(to, { opacity: 1, duration: 0.6, ease: 'power2.inOut' }, 0);
+        }
+
+        /* ---- Input Handlers ---- */
+        container.addEventListener('wheel', function (e) {
+            if (!pin.isActive) return;
+            if (animating || cAnim || sAnim) { e.preventDefault(); return; }
+
+            if (e.deltaY > 0) {
+                if (current === 0 && cN > 1 && cIdx < cN - 1) {
+                    e.preventDefault();
+                    goToCard(cIdx + 1);
+                } else if (current === 1 && sN > 0 && sIdx < sN - 1) {
+                    e.preventDefault();
+                    goToSolutionCard(sIdx + 1);
+                } else if (current < N - 1) {
+                    e.preventDefault();
+                    goTo(current + 1);
+                }
+            } else if (e.deltaY < 0) {
+                if (current === 0 && cN > 1 && cIdx > 0) {
+                    e.preventDefault();
+                    goToCard(cIdx - 1);
+                } else if (current === 1 && sN > 0 && sIdx >= 0) {
+                    e.preventDefault();
+                    goToSolutionCard(sIdx - 1);
+                } else if (current > 0) {
+                    e.preventDefault();
+                    goTo(current - 1);
+                }
+            }
+        }, { passive: false });
+
+        var touchY = 0;
+        container.addEventListener('touchstart', function (e) {
+            if (pin.isActive) touchY = e.touches[0].clientY;
+        }, { passive: true });
+
+        container.addEventListener('touchmove', function (e) {
+            if (!pin.isActive) return;
+            if (animating || cAnim || sAnim) { e.preventDefault(); return; }
+            var delta = touchY - e.touches[0].clientY;
+            if (Math.abs(delta) < 50) return;
+
+            if (delta > 0) {
+                if (current === 0 && cN > 1 && cIdx < cN - 1) {
+                    e.preventDefault();
+                    goToCard(cIdx + 1);
+                    touchY = e.touches[0].clientY;
+                } else if (current === 1 && sN > 0 && sIdx < sN - 1) {
+                    e.preventDefault();
+                    goToSolutionCard(sIdx + 1);
+                    touchY = e.touches[0].clientY;
+                } else if (current < N - 1) {
+                    e.preventDefault();
+                    goTo(current + 1);
+                    touchY = e.touches[0].clientY;
+                }
+            } else if (delta < 0) {
+                if (current === 0 && cN > 1 && cIdx > 0) {
+                    e.preventDefault();
+                    goToCard(cIdx - 1);
+                    touchY = e.touches[0].clientY;
+                } else if (current === 1 && sN > 0 && sIdx >= 0) {
+                    e.preventDefault();
+                    goToSolutionCard(sIdx - 1);
+                    touchY = e.touches[0].clientY;
+                } else if (current > 0) {
+                    e.preventDefault();
+                    goTo(current - 1);
+                    touchY = e.touches[0].clientY;
+                }
+            }
+        }, { passive: false });
+    })();
+
+    (function () {
+        var targets = document.querySelectorAll('[data-typewrite]');
+        if (!targets.length) return;
+
+        var container = document.getElementById('immersive-scroll');
+        var containerVisible = false;
+
+        targets.forEach(function (el) {
+            var text = el.getAttribute('data-typewrite');
+            var textSpan = el.querySelector('.typing-text');
+            var cursorSpan = el.querySelector('.typing-cursor');
+            var hasTyped = false;
+
+            function type() {
+                if (hasTyped) return;
+                hasTyped = true;
+                textSpan.textContent = '';
+                cursorSpan.classList.add('typing-active');
+                var i = 0;
+
+                var interval = setInterval(function () {
+                    if (i < text.length) {
+                        textSpan.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                        cursorSpan.classList.remove('typing-active');
+                    }
+                }, 35 + Math.random() * 45);
+            }
+
+            el._typewrite = { type: type, hasTyped: function () { return hasTyped; } };
+
+            var panel = el.closest('.immersive-panel');
+            if (panel) {
+                var observer = new MutationObserver(function () {
+                    if (containerVisible && parseFloat(panel.style.opacity) >= 1 && !hasTyped) type();
+                });
+                observer.observe(panel, { attributes: true, attributeFilter: ['style'] });
+            }
+        });
+
+        if (container) {
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting && !containerVisible) {
+                        containerVisible = true;
+                        targets.forEach(function (el) {
+                            var panel = el.closest('.immersive-panel');
+                            if (panel && parseFloat(panel.style.opacity) >= 1 && !el._typewrite.hasTyped()) {
+                                el._typewrite.type();
+                            }
+                        });
+                    }
+                });
+            }, { threshold: 0.3 });
+            io.observe(container);
+        }
+    })();
+    </script>
+
+    <!-- Laser Beam Effect on Methodology Section -->
+    <script>
+    (function initLaserBeam() {
+        var panel = document.querySelector('[data-panel="2"]');
+        if (!panel || window.innerWidth < 1024) return;
+
+        var gridContainer = panel.querySelector('.relative');
+        if (!gridContainer) return;
+
+        var oldLine = document.getElementById('methodology-old-line');
+        if (oldLine) oldLine.style.display = 'none';
+
+        var H = 120;
+        var BY = H / 2;
+        var canvas = document.createElement('canvas');
+        canvas.id = 'laser-beam-canvas';
+        canvas.style.cssText = 'position:absolute;top:' + (28 - BY) + 'px;left:28px;width:calc(100% - 56px);height:' + H + 'px;pointer-events:none;z-index:1;';
+        gridContainer.appendChild(canvas);
+
+        var ctx = canvas.getContext('2d');
+        var dpr, W;
+
+        function resize() {
+            dpr = window.devicePixelRatio || 1;
+            var rect = canvas.getBoundingClientRect();
+            W = rect.width;
+            canvas.width = Math.round(W * dpr);
+            canvas.height = Math.round(H * dpr);
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+
+        var mx = -9999, my = -9999;
+        var smoothMx = -9999, smoothMy = -9999;
+
+        panel.addEventListener('mousemove', function(e) {
+            var r = canvas.getBoundingClientRect();
+            mx = e.clientX - r.left;
+            my = e.clientY - r.top;
+        });
+
+        panel.addEventListener('mouseleave', function() {
+            mx = -9999;
+            my = -9999;
+        });
+
+        var particles = [];
+        var MAX_P = 180;
+        var t = 0;
+
+        function spawn(x, y, power) {
+            if (particles.length >= MAX_P) return;
+            var angle = Math.random() * Math.PI * 2;
+            var speed = (0.5 + Math.random() * 2) * power;
+            particles.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * speed * 0.8,
+                vy: Math.sin(angle) * speed - 1.2 * power,
+                life: 1,
+                decay: 0.008 + Math.random() * 0.018,
+                size: 0.5 + Math.random() * 2
+            });
+        }
+
+        function beamY(x) {
+            var y = BY;
+
+            var wave1 = Math.sin(x * 0.035 - t * 9) * 3.5;
+            var wave2 = Math.sin(x * 0.06 - t * 14) * 1.8;
+            var wave3 = Math.sin(x * 0.015 - t * 5) * 2;
+            y += wave1 + wave2 + wave3;
+
+            if (smoothMx > -1000) {
+                var dx = x - smoothMx;
+                var dy = BY - smoothMy;
+                var d = Math.sqrt(dx * dx + dy * dy);
+                var R = 160;
+                if (d < R) {
+                    var inf = 1 - d / R;
+                    inf = inf * inf;
+                    var ripple = Math.sin(d * 0.06 - t * 7) * inf * 18;
+                    var radial = Math.sin(d * 0.12 + t * 4) * inf * 5;
+                    y += ripple + radial;
+                }
+            }
+
+            return y;
+        }
+
+        function buildPath() {
+            var step = 2;
+            var n = Math.ceil(W / step);
+            var pts = new Array(n + 1);
+            for (var i = 0; i <= n; i++) {
+                var x = (i / n) * W;
+                pts[i] = { x: x, y: beamY(x) };
+            }
+            return pts;
+        }
+
+        function strokeBeam(pts, w, color) {
+            ctx.beginPath();
+            ctx.moveTo(pts[0].x, pts[0].y);
+            for (var i = 1; i < pts.length; i++) {
+                ctx.lineTo(pts[i].x, pts[i].y);
+            }
+            ctx.strokeStyle = color;
+            ctx.lineWidth = w;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+        }
+
+        function drawParticles() {
+            for (var i = particles.length - 1; i >= 0; i--) {
+                var p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.035;
+                p.vx *= 0.99;
+                p.life -= p.decay;
+
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                var a = p.life * p.life;
+                var r = p.size * (0.3 + p.life * 0.7);
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, r * 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(30,77,50,' + (a * 0.08).toFixed(3) + ')';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, r * 1.8, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(50,130,30,' + (a * 0.25).toFixed(3) + ')';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(90,170,20,' + (a * 0.85).toFixed(3) + ')';
+                ctx.fill();
+            }
+        }
+
+        var lastTime = 0;
+
+        function frame(now) {
+            requestAnimationFrame(frame);
+
+            if (parseFloat(panel.style.opacity) < 0.5) return;
+            if (!W || W <= 0) { resize(); return; }
+
+            var dt = lastTime ? Math.min((now - lastTime) / 1000, 0.05) : 0.016;
+            lastTime = now;
+            t += dt;
+
+            if (mx > -1000) {
+                smoothMx += (mx - smoothMx) * 0.12;
+                smoothMy += (my - smoothMy) * 0.12;
+            } else {
+                smoothMx += (-9999 - smoothMx) * 0.05;
+                smoothMy += (-9999 - smoothMy) * 0.05;
+            }
+
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+
+            var pts = buildPath();
+
+            var pulse = 0.88 + Math.sin(t * 2.5) * 0.12;
+
+            ctx.globalCompositeOperation = 'screen';
+
+            strokeBeam(pts, 36, 'rgba(15,43,38,' + (0.12 * pulse).toFixed(4) + ')');
+            strokeBeam(pts, 22, 'rgba(20,60,35,' + (0.18 * pulse).toFixed(4) + ')');
+            strokeBeam(pts, 13, 'rgba(30,77,45,' + (0.25 * pulse).toFixed(4) + ')');
+            strokeBeam(pts, 7, 'rgba(40,110,25,' + (0.35 * pulse).toFixed(3) + ')');
+            strokeBeam(pts, 3.5, 'rgba(55,140,15,' + (0.55 * pulse).toFixed(3) + ')');
+            strokeBeam(pts, 1.8, 'rgba(75,160,10,' + (0.7 * pulse).toFixed(3) + ')');
+            strokeBeam(pts, 0.8, 'rgba(100,180,0,' + (0.85 * pulse).toFixed(3) + ')');
+            strokeBeam(pts, 0.3, 'rgba(140,210,30,' + (0.9 * pulse).toFixed(3) + ')');
+
+            if (smoothMx > 0 && smoothMx < W) {
+                var mouseDist = Math.abs(smoothMy - BY);
+                if (mouseDist < 100) {
+                    var boost = Math.pow(1 - mouseDist / 100, 1.5);
+
+                    var g1 = ctx.createRadialGradient(smoothMx, BY, 0, smoothMx, BY, 80);
+                    g1.addColorStop(0, 'rgba(50,130,20,' + (0.2 * boost).toFixed(3) + ')');
+                    g1.addColorStop(0.5, 'rgba(30,80,15,' + (0.08 * boost).toFixed(3) + ')');
+                    g1.addColorStop(1, 'rgba(15,43,38,0)');
+                    ctx.fillStyle = g1;
+                    ctx.fillRect(smoothMx - 80, BY - 80, 160, 160);
+
+                    var g2 = ctx.createRadialGradient(smoothMx, BY, 0, smoothMx, BY, 40);
+                    g2.addColorStop(0, 'rgba(90,170,10,' + (0.08 * boost).toFixed(3) + ')');
+                    g2.addColorStop(1, 'rgba(50,130,0,0)');
+                    ctx.fillStyle = g2;
+                    ctx.fillRect(smoothMx - 40, BY - 40, 80, 80);
+                }
+            }
+
+            ctx.globalCompositeOperation = 'source-over';
+
+            if (Math.random() < 0.06) {
+                var rx = Math.random() * W;
+                spawn(rx, beamY(rx), 0.25);
+            }
+
+            if (smoothMx > 0 && smoothMx < W) {
+                var md = Math.abs(smoothMy - BY);
+                if (md < 100) {
+                    var pwr = Math.pow(1 - md / 100, 1.5);
+                    var spawnRate = pwr * 0.6;
+                    if (Math.random() < spawnRate) {
+                        var px = smoothMx + (Math.random() - 0.5) * 60;
+                        spawn(px, beamY(px), pwr * 1.2);
+                    }
+                    if (Math.random() < spawnRate * 0.3) {
+                        var px2 = smoothMx + (Math.random() - 0.5) * 30;
+                        spawn(px2, beamY(px2), pwr * 0.6);
+                    }
+                }
+            }
+
+            drawParticles();
+        }
+
+        requestAnimationFrame(frame);
+    })();
+    </script>
+
+    <!-- Progress Laser Beam on Problem Section -->
+    <script>
+    (function initProgressBeam() {
+        var container = document.getElementById('problem-beam-container');
+        var progressEl = document.getElementById('problem-progress');
+        if (!container || !progressEl || window.innerWidth < 1024) return;
+
+        var H = 50;
+        var BY = H / 2;
+        var canvas = document.createElement('canvas');
+        canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;';
+        container.appendChild(canvas);
+
+        var ctx = canvas.getContext('2d');
+        var dpr, W;
+
+        function resize() {
+            dpr = window.devicePixelRatio || 1;
+            var rect = canvas.getBoundingClientRect();
+            W = rect.width;
+            canvas.width = Math.round(W * dpr);
+            canvas.height = Math.round(H * dpr);
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+
+        var particles = [];
+        var MAX_P = 120;
+        var t = 0;
+        var currentProgress = 0.25;
+
+        function spawn(x, y, power) {
+            if (particles.length >= MAX_P) return;
+            var angle = (Math.random() - 0.5) * Math.PI * 1.2;
+            var speed = (0.4 + Math.random() * 1.8) * power;
+            particles.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * speed * 0.5 + 0.5 * power,
+                vy: Math.sin(angle) * speed - 0.6 * power,
+                life: 1,
+                decay: 0.01 + Math.random() * 0.025,
+                size: 0.4 + Math.random() * 1.6
+            });
+        }
+
+        function beamY(x, tipX) {
+            var y = BY;
+            var tipZone = 40;
+            var distFromTip = tipX - x;
+
+            if (distFromTip < tipZone && distFromTip >= 0) {
+                var inf = 1 - distFromTip / tipZone;
+                inf = inf * inf * inf;
+                y += Math.sin(distFromTip * 0.12 - t * 9) * inf * 8;
+                y += Math.sin(distFromTip * 0.2 + t * 13) * inf * 4;
+                y += Math.sin(distFromTip * 0.06 - t * 5) * inf * 3;
+            }
+
+            return y;
+        }
+
+        function strokePath(pts, w, color) {
+            if (pts.length < 2) return;
+            ctx.beginPath();
+            ctx.moveTo(pts[0].x, pts[0].y);
+            for (var i = 1; i < pts.length; i++) {
+                ctx.lineTo(pts[i].x, pts[i].y);
+            }
+            ctx.strokeStyle = color;
+            ctx.lineWidth = w;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+        }
+
+        function drawParticles() {
+            for (var i = particles.length - 1; i >= 0; i--) {
+                var p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.03;
+                p.vx *= 0.985;
+                p.life -= p.decay;
+
+                if (p.life <= 0) { particles.splice(i, 1); continue; }
+
+                var a = p.life * p.life;
+                var r = p.size * (0.3 + p.life * 0.7);
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, r * 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(77,30,30,' + (a * 0.07).toFixed(3) + ')';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, r * 1.6, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(130,30,30,' + (a * 0.22).toFixed(3) + ')';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(200,40,40,' + (a * 0.8).toFixed(3) + ')';
+                ctx.fill();
+            }
+        }
+
+        function frame() {
+            requestAnimationFrame(frame);
+
+            var panel = container.closest('.immersive-panel');
+            if (panel && parseFloat(panel.style.opacity) < 0.5) return;
+            if (!W || W <= 0) { resize(); return; }
+
+            t += 0.016;
+
+            var rawWidth = progressEl.style.width;
+            var targetProgress = rawWidth ? parseFloat(rawWidth) / 100 : 0.25;
+            currentProgress += (targetProgress - currentProgress) * 0.045;
+
+            var tipX = currentProgress * W;
+
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+
+            if (tipX < 2) { drawParticles(); return; }
+
+            var step = 2;
+            var n = Math.max(2, Math.ceil(tipX / step));
+            var pts = [];
+            for (var i = 0; i <= n; i++) {
+                var x = (i / n) * tipX;
+                pts.push({ x: x, y: beamY(x, tipX) });
+            }
+
+            var pulse = 0.88 + Math.sin(t * 2.5) * 0.12;
+
+            ctx.globalCompositeOperation = 'screen';
+
+            strokePath(pts, 22, 'rgba(43,15,15,' + (0.10 * pulse).toFixed(4) + ')');
+            strokePath(pts, 13, 'rgba(60,20,20,' + (0.16 * pulse).toFixed(4) + ')');
+            strokePath(pts, 8, 'rgba(77,30,30,' + (0.22 * pulse).toFixed(4) + ')');
+            strokePath(pts, 4.5, 'rgba(130,30,30,' + (0.34 * pulse).toFixed(3) + ')');
+            strokePath(pts, 2.5, 'rgba(170,25,25,' + (0.52 * pulse).toFixed(3) + ')');
+            strokePath(pts, 1.2, 'rgba(200,30,30,' + (0.68 * pulse).toFixed(3) + ')');
+            strokePath(pts, 0.5, 'rgba(220,40,40,' + (0.82 * pulse).toFixed(3) + ')');
+            strokePath(pts, 0.2, 'rgba(255,50,50,' + (0.88 * pulse).toFixed(3) + ')');
+
+            var flowSpeed = 120;
+            var flowLen = tipX + 60;
+            var flowX = flowLen > 0 ? ((t * flowSpeed) % flowLen) - 20 : 0;
+            if (flowX > 0 && flowX < tipX) {
+                var fg = ctx.createRadialGradient(flowX, BY, 0, flowX, BY, 25);
+                fg.addColorStop(0, 'rgba(130,20,20,' + (0.10 * pulse).toFixed(3) + ')');
+                fg.addColorStop(1, 'rgba(77,30,30,0)');
+                ctx.fillStyle = fg;
+                ctx.fillRect(flowX - 25, BY - 25, 50, 50);
+            }
+
+            var tipY = pts[pts.length - 1].y;
+            var g1 = ctx.createRadialGradient(tipX, tipY, 0, tipX, tipY, 30);
+            g1.addColorStop(0, 'rgba(130,20,20,' + (0.18 * pulse).toFixed(3) + ')');
+            g1.addColorStop(0.4, 'rgba(80,15,15,' + (0.07 * pulse).toFixed(3) + ')');
+            g1.addColorStop(1, 'rgba(43,15,15,0)');
+            ctx.fillStyle = g1;
+            ctx.fillRect(tipX - 30, tipY - 30, 60, 60);
+
+            ctx.globalCompositeOperation = 'source-over';
+
+            if (Math.random() < 0.4) {
+                var sy = tipY + (Math.random() - 0.5) * 8;
+                spawn(tipX, sy, 0.8);
+            }
+            if (Math.random() < 0.2) {
+                spawn(tipX + (Math.random() - 0.5) * 8, tipY, 0.5);
+            }
+
+            drawParticles();
+        }
+
+        requestAnimationFrame(frame);
+    })();
+    </script>
+
+    <!-- Three.js 3D Hero Model -->
+    <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    (function initHero3D() {
+        const container = document.getElementById('hero-3d-container');
+        if (!container) return;
+
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+        camera.position.set(0, 0, 3);
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        container.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        mainLight.position.set(5, 5, 5);
+        scene.add(mainLight);
+
+        const accentLight = new THREE.PointLight(0xC6FF00, 2, 10);
+        accentLight.position.set(-3, 2, 3);
+        scene.add(accentLight);
+
+        const rimLight = new THREE.DirectionalLight(0xC6FF00, 0.4);
+        rimLight.position.set(-5, 0, -5);
+        scene.add(rimLight);
+
+        const BASE_ROTATION = { x: 1.5, y: 0, z: 0.05 };
+        const MOUSE_INFLUENCE = { x: 0.25, y: 0.35 };
+        const LERP_FACTOR = 0.06;
+
+        const mouse = { x: 0, y: 0 };
+        const targetRotation = { x: BASE_ROTATION.x, y: BASE_ROTATION.y };
+        const currentRotation = { x: BASE_ROTATION.x, y: BASE_ROTATION.y };
+
+        window.addEventListener('mousemove', function(e) {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+
+            targetRotation.x = BASE_ROTATION.x + mouse.y * MOUSE_INFLUENCE.x;
+            targetRotation.y = BASE_ROTATION.y + mouse.x * MOUSE_INFLUENCE.y;
+        });
+
+        let model = null;
+
+        const loader = new GLTFLoader();
+        loader.load('exakta-logo-3d.gltf', function(gltf) {
+            model = gltf.scene;
+
+            const toRemove = [];
+            model.traverse(function(child) {
+                if (child.name === 'background' || (child.isCamera)) {
+                    toRemove.push(child);
+                }
+            });
+            toRemove.forEach(function(obj) {
+                if (obj.parent) obj.parent.remove(obj);
+            });
+
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+
+            const wrapper = new THREE.Group();
+            wrapper.add(model);
+            model.position.sub(center);
+
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const fitScale = 2.2 / maxDim;
+            wrapper.scale.setScalar(fitScale);
+
+            wrapper.rotation.set(BASE_ROTATION.x, BASE_ROTATION.y, BASE_ROTATION.z);
+
+            scene.add(wrapper);
+            model = wrapper;
+
+            model.traverse(function(child) {
+                if (child.isMesh && child.material) {
+                    child.material.envMapIntensity = 1.0;
+                    if (child.material.metalness !== undefined) {
+                        child.material.metalness = Math.min(child.material.metalness, 0.8);
+                        child.material.roughness = Math.max(child.material.roughness, 0.2);
+                    }
+                }
+            });
+
+            gsap.from(wrapper.scale, {
+                x: 0, y: 0, z: 0,
+                duration: 1.2,
+                ease: 'elastic.out(1, 0.5)',
+                delay: 0.3
+            });
+            gsap.from(wrapper.rotation, {
+                y: BASE_ROTATION.y + Math.PI,
+                duration: 1.5,
+                ease: 'power3.out',
+                delay: 0.2
+            });
+        });
+
+        function handleResize() {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        }
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (model) {
+                currentRotation.x += (targetRotation.x - currentRotation.x) * LERP_FACTOR;
+                currentRotation.y += (targetRotation.y - currentRotation.y) * LERP_FACTOR;
+
+                model.rotation.x = currentRotation.x;
+                model.rotation.y = currentRotation.y;
+            }
+
+            renderer.render(scene, camera);
+        }
+        animate();
+    })();
+    </script>
+
+</body></html>
