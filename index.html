@@ -6,6 +6,7 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+    <link rel="icon" type="image/png" href="img/exakta-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -111,6 +112,19 @@
             will-change: opacity;
         }
 
+        #solution-canvas-container {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        #solution-canvas-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
         /* Typing animation */
         @keyframes blink {
             0%, 100% { opacity: 1; }
@@ -196,9 +210,8 @@
     <!-- 1. HEADER -->
     <header class="fixed top-0 w-full z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-white/5 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" class="font-heading font-semibold text-xl tracking-tighter text-white flex items-center gap-2">
-                EXAKTA
-                <span class="w-1.5 h-1.5 bg-[#C6FF00] rounded-full shadow-[0_0_8px_#C6FF00]"></span>
+            <a href="#" class="flex items-center">
+                <img src="img/exakta-logo.png" alt="Exakta Dev" class="h-8">
             </a>
             
             <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
@@ -367,8 +380,9 @@
         </section>
 
         <!-- 4. SEÇÃO SOLUÇÃO -->
-        <section class="immersive-panel py-24" data-panel="1">
-        <div class="max-w-7xl mx-auto px-6">
+        <section class="immersive-panel py-24" data-panel="1" style="isolation: isolate;">
+        <div id="solution-canvas-container"></div>
+        <div class="max-w-7xl mx-auto px-6" style="position: relative; z-index: 10;">
             <div class="mb-16">
                 <span class="text-[#C6FF00] font-mono-tech text-xs tracking-widest uppercase mb-4 block">&lt;SmartSolution /&gt;</span>
                 <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white max-w-3xl min-h-[3.5rem] md:min-h-[4.5rem]"
@@ -379,7 +393,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="solution-card bg-[#0F2B26]/50 border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
+                <div class="solution-card bg-[#0F2B26] border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-[#C6FF00] opacity-[0.03] blur-[40px] rounded-full"></div>
                     <div class="w-12 h-12 bg-[#132F29] rounded-2xl flex items-center justify-center mb-6 border border-[#C6FF00]/20 transition-colors solution-card-icon">
                         <iconify-icon icon="solar:bolt-circle-linear" width="24" class="text-[#C6FF00]"></iconify-icon>
@@ -388,7 +402,7 @@
                     <p class="text-sm text-gray-400 leading-relaxed">Workflows automatizados com IA que eliminam tarefas repetitivas, liberando sua equipe para o que gera valor.</p>
                 </div>
 
-                <div class="solution-card bg-[#0F2B26]/50 border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
+                <div class="solution-card bg-[#0F2B26] border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-[#C6FF00] opacity-[0.03] blur-[40px] rounded-full"></div>
                     <div class="w-12 h-12 bg-[#132F29] rounded-2xl flex items-center justify-center mb-6 border border-[#C6FF00]/20 transition-colors solution-card-icon">
                         <iconify-icon icon="solar:graph-up-linear" width="24" class="text-[#C6FF00]"></iconify-icon>
@@ -397,7 +411,7 @@
                     <p class="text-sm text-gray-400 leading-relaxed">Pipelines de dados e modelos de IA que transformam informação bruta em decisões estratégicas em tempo real.</p>
                 </div>
 
-                <div class="solution-card bg-[#0F2B26]/50 border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
+                <div class="solution-card bg-[#0F2B26] border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-[#C6FF00] opacity-[0.03] blur-[40px] rounded-full"></div>
                     <div class="w-12 h-12 bg-[#132F29] rounded-2xl flex items-center justify-center mb-6 border border-[#C6FF00]/20 transition-colors solution-card-icon">
                         <iconify-icon icon="solar:chat-round-dots-linear" width="24" class="text-[#C6FF00]"></iconify-icon>
@@ -406,7 +420,7 @@
                     <p class="text-sm text-gray-400 leading-relaxed">Agentes virtuais contextuais que escalam seu suporte 24/7 sem perder qualidade na experiência do cliente.</p>
                 </div>
 
-                <div class="solution-card bg-[#0F2B26]/50 border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
+                <div class="solution-card bg-[#0F2B26] border border-[#C6FF00]/10 rounded-[20px] p-8 transition-all duration-500 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-[#C6FF00] opacity-[0.03] blur-[40px] rounded-full"></div>
                     <div class="w-12 h-12 bg-[#132F29] rounded-2xl flex items-center justify-center mb-6 border border-[#C6FF00]/20 transition-colors solution-card-icon">
                         <iconify-icon icon="solar:link-round-linear" width="24" class="text-[#C6FF00]"></iconify-icon>
@@ -419,13 +433,15 @@
     </section>
 
         <!-- 5. METODOLOGIA -->
-        <section class="immersive-panel py-24" data-panel="2">
-        <div class="max-w-7xl mx-auto px-6">
+        <section class="immersive-panel py-24" data-panel="2" style="isolation: isolate;">
+        <!-- Laser glow illumination -->
+        <div id="methodology-laser-glow" style="position:absolute;inset:0;pointer-events:none;z-index:0;"></div>
+        <div class="max-w-7xl mx-auto px-6" style="position:relative;z-index:1;">
             <div class="mb-16">
                 <span class="text-[#C6FF00] font-mono-tech text-xs tracking-widest uppercase mb-4 block">&lt;PrecisionProcess /&gt;</span>
                 <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white min-h-[3.5rem] md:min-h-[4.5rem]"
-                    data-typewrite="Como transformamos desafios em resultados — com engenharia de precisão."
-                    aria-label="Como transformamos desafios em resultados — com engenharia de precisão.">
+                    data-typewrite="Como transformamos desafios em resultados com engenharia de precisão."
+                    aria-label="Como transformamos desafios em resultados com engenharia de precisão.">
                     <span class="typing-text"></span><span class="typing-cursor"></span>
                 </h2>
             </div>
@@ -725,9 +741,8 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                 <div class="col-span-1 md:col-span-2">
-                    <a href="#" class="font-heading font-semibold text-2xl tracking-tighter text-white flex items-center gap-2 mb-4">
-                        EXAKTA
-                        <span class="w-2 h-2 bg-[#C6FF00] rounded-full shadow-[0_0_8px_#C6FF00]"></span>
+                    <a href="#" class="flex items-center mb-4">
+                        <img src="img/exakta-logo.png" alt="Exakta Dev" class="h-10">
                     </a>
                     <p class="text-sm text-gray-500 max-w-sm leading-relaxed">
                         Engenharia de software especializada em Inteligência Artificial para negócios que exigem precisão, performance e escalabilidade estrutural.
@@ -1089,6 +1104,30 @@
             }, { threshold: 0.3 });
             io.observe(container);
         }
+    })();
+    </script>
+
+    <!-- Laser Glow Position -->
+    <script>
+    (function initLaserGlow() {
+        var panel = document.querySelector('[data-panel="2"]');
+        if (!panel) return;
+        var glowEl = document.getElementById('methodology-laser-glow');
+        var gridContainer = panel.querySelector('.relative');
+        if (!glowEl || !gridContainer) return;
+
+        function updateGlow() {
+            var panelRect = panel.getBoundingClientRect();
+            var gridRect = gridContainer.getBoundingClientRect();
+            var laserY = gridRect.top - panelRect.top + 28;
+            var pct = (laserY / panelRect.height * 100).toFixed(1);
+            glowEl.style.background =
+                'radial-gradient(ellipse 80% 50px at 50% ' + pct + '%, rgba(198,255,0,0.09) 0%, transparent 100%), ' +
+                'radial-gradient(ellipse 60% 140px at 50% ' + pct + '%, rgba(30,77,63,0.16) 0%, transparent 70%), ' +
+                'radial-gradient(ellipse 110% 380px at 50% ' + pct + '%, rgba(198,255,0,0.03) 0%, transparent 100%)';
+        }
+        updateGlow();
+        window.addEventListener('resize', updateGlow);
     })();
     </script>
 
@@ -1550,7 +1589,7 @@
         rimLight.position.set(-5, 0, -5);
         scene.add(rimLight);
 
-        const BASE_ROTATION = { x: 1.5, y: 0, z: 0.05 };
+        const BASE_ROTATION = { x: 0, y: 1, z: 0.05 };
         const MOUSE_INFLUENCE = { x: 0.25, y: 0.35 };
         const LERP_FACTOR = 0.06;
 
@@ -1569,7 +1608,7 @@
         let model = null;
 
         const loader = new GLTFLoader();
-        loader.load('exakta-logo-3d.gltf', function(gltf) {
+        loader.load('kotlin+logo+3d+model.glb', function(gltf) {
             model = gltf.scene;
 
             const toRemove = [];
@@ -1648,6 +1687,262 @@
             renderer.render(scene, camera);
         }
         animate();
+    })();
+    </script>
+
+    <!-- Particle Vortex Background - Section Solução -->
+    <script type="module">
+    import * as THREE from 'three';
+
+    (function initSolutionParticles() {
+        const container = document.getElementById('solution-canvas-container');
+        if (!container) return;
+
+        const section = container.closest('.immersive-panel');
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0A0A0A, 0.0007);
+
+        const camera = new THREE.PerspectiveCamera(
+            60,
+            container.clientWidth / container.clientHeight,
+            1,
+            3000
+        );
+        camera.position.z = 850;
+
+        const renderer = new THREE.WebGLRenderer({
+            alpha: true,
+            antialias: true,
+            powerPreference: 'high-performance'
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        const particleCount = 12000;
+        const positions = new THREE.BufferAttribute(new Float32Array(particleCount * 3), 3);
+        const sizes = new THREE.BufferAttribute(new Float32Array(particleCount), 1);
+        const colors = new THREE.BufferAttribute(new Float32Array(particleCount * 3), 3);
+        const randoms = new THREE.BufferAttribute(new Float32Array(particleCount * 2), 2);
+
+        const color = new THREE.Color();
+
+        for (let i = 0; i < particleCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const yRand = (Math.random() - 0.5) * 2.0;
+            const radiusRand = Math.random();
+
+            positions.setXYZ(i, Math.cos(theta), yRand, Math.sin(theta));
+            randoms.setXY(i, radiusRand, Math.random());
+            sizes.setX(i, Math.random() * 2.8 + 0.6);
+
+            const mix = Math.random();
+            if (mix > 0.78) {
+                color.setHSL(0.20 + Math.random() * 0.08, 0.95, 0.45 + Math.random() * 0.35);
+            } else {
+                color.setRGB(
+                    0.55 + Math.random() * 0.3,
+                    0.60 + Math.random() * 0.35,
+                    0.45 + Math.random() * 0.2
+                );
+            }
+            colors.setXYZ(i, color.r, color.g, color.b);
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', positions);
+        geometry.setAttribute('size', sizes);
+        geometry.setAttribute('color', colors);
+        geometry.setAttribute('aRandom', randoms);
+
+        const vertexShader = `
+            attribute float size;
+            attribute vec3 color;
+            attribute vec2 aRandom;
+            varying vec3 vColor;
+            varying float vAlpha;
+            uniform float uTime;
+            uniform vec3 uStretchDir;
+            uniform float uStretchForce;
+
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+            float snoise(vec3 v) {
+                const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+                const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i = floor(v + dot(v, C.yyy));
+                vec3 x0 = v - i + dot(i, C.xxx);
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min(g.xyz, l.zxy);
+                vec3 i2 = max(g.xyz, l.zxy);
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i);
+                vec4 p = permute(permute(permute(
+                    i.z + vec4(0.0, i1.z, i2.z, 1.0)) +
+                    i.y + vec4(0.0, i1.y, i2.y, 1.0)) +
+                    i.x + vec4(0.0, i1.x, i2.x, 1.0));
+                float n_ = 0.142857142857;
+                vec3 ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_);
+                vec4 x = x_ * ns.x + ns.yyyy;
+                vec4 y = y_ * ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4(x.xy, y.xy);
+                vec4 b1 = vec4(x.zw, y.zw);
+                vec4 s0 = floor(b0) * 2.0 + 1.0;
+                vec4 s1 = floor(b1) * 2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+                vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+                vec3 p0 = vec3(a0.xy, h.x);
+                vec3 p1 = vec3(a0.zw, h.y);
+                vec3 p2 = vec3(a1.xy, h.z);
+                vec3 p3 = vec3(a1.zw, h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+                p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+            }
+
+            void main() {
+                vColor = color;
+                float cycle = fract(uTime * 0.2 + aRandom.y);
+                float flowY = (cycle * 2.0 - 1.0);
+
+                float holeRadius = 150.0;
+                float bodyThickness = 250.0;
+                float radialSuck = 1.0 - (flowY * flowY);
+                float r = holeRadius + (bodyThickness * aRandom.x * (1.5 - radialSuck));
+
+                vec3 pos = vec3(position.x * r, flowY * 450.0, position.z * r);
+
+                float heartbeat = sin(uTime * 2.5) * 0.5 + 0.5;
+                pos *= 1.0 + (heartbeat * 0.15);
+
+                vec3 noisePos = vec3(pos.x * 0.005 + uTime * 0.5, pos.y * 0.005 + uTime * 0.4, pos.z * 0.005);
+                float n = snoise(noisePos);
+                vec3 dirNorm = normalize(pos);
+                pos += dirNorm * (n * 120.0);
+
+                float dotProductDir = dot(normalize(pos), normalize(uStretchDir));
+                pos += uStretchDir * (uStretchForce * 0.8 * abs(dotProductDir));
+
+                vAlpha = smoothstep(0.0, 0.2, cycle) * smoothstep(1.0, 0.8, cycle);
+
+                vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                gl_Position = projectionMatrix * mvPosition;
+                gl_PointSize = size * vAlpha * (450.0 / -mvPosition.z);
+            }
+        `;
+
+        const fragmentShader = `
+            varying vec3 vColor;
+            varying float vAlpha;
+            void main() {
+                vec2 xy = gl_PointCoord.xy - vec2(0.5);
+                float ll = length(xy);
+                if (ll > 0.5) discard;
+                float alphaCircle = (0.5 - ll) * 2.0;
+                gl_FragColor = vec4(vColor, alphaCircle * vAlpha * 0.75);
+            }
+        `;
+
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0.0 },
+                uStretchDir: { value: new THREE.Vector3(0, 0, 0) },
+                uStretchForce: { value: 0.0 }
+            },
+            vertexShader,
+            fragmentShader,
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particleSystem = new THREE.Points(geometry, material);
+        scene.add(particleSystem);
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', function(event) {
+            const rect = container.getBoundingClientRect();
+            mouseX = event.clientX - rect.left - rect.width / 2;
+            mouseY = event.clientY - rect.top - rect.height / 2;
+        });
+
+        function handleResize() {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            if (w === 0 || h === 0) return;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        }
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        let time = 0;
+        let isVisible = false;
+        let rafId = null;
+
+        function animate() {
+            if (!isVisible) { rafId = null; return; }
+            rafId = requestAnimationFrame(animate);
+
+            time += 0.01;
+            material.uniforms.uTime.value = time;
+
+            particleSystem.rotation.y += 0.004;
+            particleSystem.rotation.x += 0.002;
+            particleSystem.rotation.z -= 0.001;
+
+            const targetX = mouseX * 0.7;
+            const targetY = -mouseY * 0.7;
+            const deltaX = targetX - particleSystem.position.x;
+            const deltaY = targetY - particleSystem.position.y;
+            const force = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            particleSystem.position.x += deltaX * 0.07;
+            particleSystem.position.y += deltaY * 0.07;
+
+            material.uniforms.uStretchDir.value.set(deltaX, deltaY, 0).normalize();
+            if (isNaN(material.uniforms.uStretchDir.value.x)) {
+                material.uniforms.uStretchDir.value.set(0, 0, 0);
+            }
+            material.uniforms.uStretchForce.value = Math.min(force, 180.0);
+
+            camera.position.x += (mouseX * 0.12 - camera.position.x) * 0.02;
+            camera.position.y += (-mouseY * 0.12 - camera.position.y) * 0.02;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    isVisible = true;
+                    if (!rafId) animate();
+                } else {
+                    isVisible = false;
+                }
+            });
+        }, { threshold: 0.05 });
+
+        observer.observe(section || container);
     })();
     </script>
 
