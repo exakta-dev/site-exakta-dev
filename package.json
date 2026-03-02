@@ -1,0 +1,11 @@
+{
+  "name": "exakta-lp",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -o styles.css --content index.html --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
