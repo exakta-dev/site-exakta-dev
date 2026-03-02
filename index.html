@@ -203,6 +203,218 @@
             }
         }
 
+        /* Cases section */
+        .cases-section {
+            position: relative;
+            overflow: hidden;
+        }
+        .cases-images {
+            display: flex;
+            gap: 1.5rem;
+            padding-right: 6rem;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cases-images__item {
+            position: relative;
+            flex: 0 0 65%;
+            min-width: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: none;
+        }
+        @media (max-width: 768px) {
+            .cases-images__item {
+                flex: 0 0 85%;
+            }
+        }
+        .cases-images__item img {
+            width: 100%;
+            aspect-ratio: 16/10;
+            object-fit: cover;
+            display: block;
+            border-radius: 20px;
+        }
+        .cases-images__cursor-btn {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.95);
+            color: #0A0A0A;
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.6);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .cases-images__item:hover .cases-images__cursor-btn {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .cases-info {
+            position: relative;
+            min-height: 120px;
+        }
+        .cases-info__inner {
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .cases-info__inner.is-leaving {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        .cases-info__inner.is-entering {
+            opacity: 0;
+            transform: translateY(-12px);
+        }
+        .cases-info__title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .cases-info__desc {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .cases-info__link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #C6FF00;
+            text-decoration: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: opacity 0.2s;
+        }
+        .cases-info__link:hover {
+            opacity: 0.85;
+        }
+        .cases-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .cases-nav__btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .cases-nav__btn:hover {
+            background: rgba(198,255,0,0.12);
+            border-color: rgba(198,255,0,0.3);
+        }
+        .cases-nav__btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+        .case-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .case-modal.is-open {
+            display: flex;
+        }
+        .case-modal__inner {
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            background: #0F2B26;
+            border: 1px solid rgba(198,255,0,0.2);
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+        .case-modal__slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 0;
+            scrollbar-width: none;
+        }
+        .case-modal__slider::-webkit-scrollbar {
+            display: none;
+        }
+        .case-modal__slide {
+            flex: 0 0 100%;
+            scroll-snap-align: center;
+        }
+        .case-modal__slide img {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            display: block;
+        }
+        .case-modal__close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 2;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .case-modal__close:hover {
+            background: rgba(198,255,0,0.2);
+        }
+        .case-modal__nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .case-modal__nav:hover {
+            background: rgba(198,255,0,0.25);
+            border-color: rgba(198,255,0,0.4);
+        }
+        .case-modal__nav--prev { left: 1rem; }
+        .case-modal__nav--next { right: 1rem; }
+
     </style>
 </head>
 <body class="bg-[#0A0A0A] text-[#EAEAEA] antialiased selection:bg-[#C6FF00] selection:text-[#0A0A0A]">
@@ -542,73 +754,56 @@
     </section>
 
     <!-- 7. CASES -->
-    <section id="cases" class="py-24 bg-[#0A0A0A] border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white max-w-2xl mb-16">
+    <section id="cases" class="cases-section py-24 bg-[#0A0A0A] border-t border-white/5">
+        <!-- Título + setas de controle -->
+        <div class="max-w-7xl mx-auto px-6 mb-12 flex items-end justify-between gap-6">
+            <h2 class="text-3xl md:text-4xl font-heading font-semibold tracking-tighter text-white max-w-2xl">
                 IA aplicada com resultados mensuráveis
             </h2>
+            <div class="cases-nav flex-shrink-0">
+                <button type="button" class="cases-nav__btn" id="cases-prev" aria-label="Case anterior">
+                    <iconify-icon icon="solar:arrow-left-linear" width="22"></iconify-icon>
+                </button>
+                <button type="button" class="cases-nav__btn" id="cases-next" aria-label="Próximo case">
+                    <iconify-icon icon="solar:arrow-right-linear" width="22"></iconify-icon>
+                </button>
+            </div>
+        </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Case 1 -->
-                <div class="bg-[#0F2B26] border border-[#1E4D3F]/50 rounded-[24px] p-10 flex flex-col justify-between">
-                    <div>
-                        <div class="mb-8">
-                            <span class="text-xs font-mono-tech text-gray-400 mb-2 block">Fintech Sec</span>
-                            <h3 class="text-2xl font-heading font-semibold text-white tracking-tight">Detecção de Fraudes em Tempo Real</h3>
-                        </div>
-                        
-                        <div class="space-y-6 mb-10">
-                            <div>
-                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Problema</h4>
-                                <p class="text-sm text-gray-300">Alto índice de falsos positivos bloqueando transações legítimas e perdas financeiras por lentidão na análise.</p>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Solução Exakta</h4>
-                                <p class="text-sm text-gray-300">Implementação de modelo preditivo com machine learning integrado via API, avaliando mais de 200 variáveis em milissegundos.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="pt-8 border-t border-white/10 flex items-end justify-between">
-                        <div>
-                            <p class="text-xs text-gray-400 mb-1">Aumento na precisão</p>
-                            <p class="text-5xl font-heading font-semibold text-[#C6FF00] tracking-tighter drop-shadow-[0_0_15px_rgba(198,255,0,0.3)]">94%</p>
-                        </div>
-                        <iconify-icon icon="solar:arrow-right-up-linear" width="32" class="text-gray-500"></iconify-icon>
-                    </div>
-                </div>
+        <!-- Carrossel de imagens (full-width, vaza para a direita) -->
+        <div class="max-w-7xl mx-auto px-6 mb-8" style="overflow:visible">
+            <div class="cases-images" id="cases-images">
+                <!-- Imagens injetadas via JS -->
+            </div>
+        </div>
 
-                <!-- Case 2 -->
-                <div class="bg-[#0F2B26] border border-[#1E4D3F]/50 rounded-[24px] p-10 flex flex-col justify-between">
-                    <div>
-                        <div class="mb-8">
-                            <span class="text-xs font-mono-tech text-gray-400 mb-2 block">Logística Corp</span>
-                            <h3 class="text-2xl font-heading font-semibold text-white tracking-tight">Otimização Dinâmica de Rotas</h3>
-                        </div>
-                        
-                        <div class="space-y-6 mb-10">
-                            <div>
-                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Problema</h4>
-                                <p class="text-sm text-gray-300">Custos operacionais elevados devido a rotas ineficientes, variabilidade no trânsito e planejamento manual demorado.</p>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Solução Exakta</h4>
-                                <p class="text-sm text-gray-300">Desenvolvimento de algoritmo genético acoplado a IA que recalcula malhas logísticas em tempo real baseado em dados multicanais.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="pt-8 border-t border-white/10 flex items-end justify-between">
-                        <div>
-                            <p class="text-xs text-gray-400 mb-1">Redução de custo logístico</p>
-                            <p class="text-5xl font-heading font-semibold text-[#C6FF00] tracking-tighter drop-shadow-[0_0_15px_rgba(198,255,0,0.3)]">-28%</p>
-                        </div>
-                        <iconify-icon icon="solar:arrow-right-up-linear" width="32" class="text-gray-500"></iconify-icon>
-                    </div>
+        <!-- Info fixa (título, descrição, link) — largura acompanha a imagem -->
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="cases-info" id="cases-info" style="max-width:65%">
+                <div class="cases-info__inner" id="cases-info-inner">
+                    <h3 class="cases-info__title" id="cases-info-title"></h3>
+                    <p class="cases-info__desc" id="cases-info-desc"></p>
+                    <span class="cases-info__link" id="cases-info-link"></span>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Modal slider para telas do case -->
+    <div id="case-modal" class="case-modal" aria-hidden="true">
+        <div class="case-modal__inner">
+            <button type="button" id="case-modal-close" class="case-modal__close" aria-label="Fechar">
+                <iconify-icon icon="solar:close-circle-linear" width="24"></iconify-icon>
+            </button>
+            <button type="button" id="case-modal-prev" class="case-modal__nav case-modal__nav--prev" aria-label="Anterior">
+                <iconify-icon icon="solar:arrow-left-linear" width="24"></iconify-icon>
+            </button>
+            <button type="button" id="case-modal-next" class="case-modal__nav case-modal__nav--next" aria-label="Próximo">
+                <iconify-icon icon="solar:arrow-right-linear" width="24"></iconify-icon>
+            </button>
+            <div id="case-modal-slider" class="case-modal__slider"></div>
+        </div>
+    </div>
 
     <!-- 7. SOBRE A EXAKTA DEV -->
     <section id="sobre" class="py-24 bg-[#0A0A0A] border-t border-white/5">
@@ -1943,6 +2138,194 @@
         }, { threshold: 0.05 });
 
         observer.observe(section || container);
+    })();
+    </script>
+
+    <script>
+    (function() {
+        var CASES_DATA = [
+            {
+                image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+                title: 'Detecção de Fraudes em Tempo Real',
+                description: 'Implementação de modelo preditivo com machine learning integrado via API, avaliando mais de 200 variáveis em milissegundos. Alto índice de falsos positivos foi reduzido com precisão de 94%.',
+                link: 'https://exemplo.com/case-fintech'
+            },
+            {
+                image: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&q=80',
+                title: 'Otimização Dinâmica de Rotas',
+                description: 'Desenvolvimento de algoritmo genético acoplado a IA que recalcula malhas logísticas em tempo real baseado em dados multicanais. Redução de 28% nos custos logísticos.',
+                screens: [
+                    'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80',
+                    'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=900&q=80',
+                    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=80'
+                ]
+            },
+            {
+                image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+                title: 'Dashboard de Inteligência de Negócios',
+                description: 'Plataforma de BI com modelos de ML para previsão de demanda e análise de sentimento. Integração com fontes legadas e visualizações em tempo real.',
+                link: 'https://exemplo.com/case-bi'
+            }
+        ];
+
+        var imagesContainer = document.getElementById('cases-images');
+        var infoInner = document.getElementById('cases-info-inner');
+        var infoTitle = document.getElementById('cases-info-title');
+        var infoDesc = document.getElementById('cases-info-desc');
+        var infoLink = document.getElementById('cases-info-link');
+        var btnPrev = document.getElementById('cases-prev');
+        var btnNext = document.getElementById('cases-next');
+        var modal = document.getElementById('case-modal');
+        var modalSlider = document.getElementById('case-modal-slider');
+        var modalClose = document.getElementById('case-modal-close');
+        var modalPrev = document.getElementById('case-modal-prev');
+        var modalNext = document.getElementById('case-modal-next');
+
+        var currentIndex = 0;
+
+        function openCase(c) {
+            if (c.link) {
+                window.open(c.link, '_blank', 'noopener,noreferrer');
+            } else if (c.screens && c.screens.length) {
+                openSlider(c.screens);
+            }
+        }
+
+        function renderImages() {
+            imagesContainer.innerHTML = '';
+            CASES_DATA.forEach(function(c, i) {
+                var item = document.createElement('div');
+                item.className = 'cases-images__item';
+                item.setAttribute('data-index', i);
+
+                var img = document.createElement('img');
+                img.src = c.image || '';
+                img.alt = c.title || '';
+                img.draggable = false;
+
+                var cursorBtn = document.createElement('span');
+                cursorBtn.className = 'cases-images__cursor-btn';
+                cursorBtn.innerHTML = '<iconify-icon icon="solar:play-circle-linear" width="18"></iconify-icon> Ver case';
+
+                item.appendChild(img);
+                item.appendChild(cursorBtn);
+
+                item.addEventListener('mousemove', function(e) {
+                    var rect = item.getBoundingClientRect();
+                    cursorBtn.style.left = (e.clientX - rect.left) + 'px';
+                    cursorBtn.style.top = (e.clientY - rect.top) + 'px';
+                });
+
+                item.addEventListener('click', function() {
+                    openCase(c);
+                });
+
+                imagesContainer.appendChild(item);
+            });
+        }
+
+        function slideToIndex(idx) {
+            if (idx < 0 || idx >= CASES_DATA.length) return;
+            var prev = currentIndex;
+            currentIndex = idx;
+
+            var firstItem = imagesContainer.querySelector('.cases-images__item');
+            if (!firstItem) return;
+            var gap = 24;
+            var offset = idx * (firstItem.offsetWidth + gap);
+            imagesContainer.style.transform = 'translateX(-' + offset + 'px)';
+
+            updateArrows();
+
+            if (prev !== idx) {
+                animateInfoChange(CASES_DATA[idx]);
+            }
+        }
+
+        function animateInfoChange(c) {
+            infoInner.classList.add('is-leaving');
+            setTimeout(function() {
+                updateInfoContent(c);
+                infoInner.classList.remove('is-leaving');
+                infoInner.classList.add('is-entering');
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        infoInner.classList.remove('is-entering');
+                    });
+                });
+            }, 250);
+        }
+
+        function updateInfoContent(c) {
+            infoTitle.textContent = c.title || '';
+            infoDesc.textContent = c.description || '';
+            infoLink.innerHTML = 'Ver case <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>';
+            infoLink.onclick = function() { openCase(c); };
+        }
+
+        function updateArrows() {
+            btnPrev.disabled = currentIndex <= 0;
+            btnNext.disabled = currentIndex >= CASES_DATA.length - 1;
+        }
+
+        btnPrev.addEventListener('click', function() {
+            slideToIndex(currentIndex - 1);
+        });
+        btnNext.addEventListener('click', function() {
+            slideToIndex(currentIndex + 1);
+        });
+
+        function openSlider(screens) {
+            modalSlider.innerHTML = '';
+            screens.forEach(function(src) {
+                var slide = document.createElement('div');
+                slide.className = 'case-modal__slide';
+                slide.innerHTML = '<img src="' + src + '" alt="">';
+                modalSlider.appendChild(slide);
+            });
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+        });
+
+        modalPrev.addEventListener('click', function() {
+            modalSlider.scrollBy({ left: -modalSlider.offsetWidth, behavior: 'smooth' });
+        });
+        modalNext.addEventListener('click', function() {
+            modalSlider.scrollBy({ left: modalSlider.offsetWidth, behavior: 'smooth' });
+        });
+
+        renderImages();
+        if (CASES_DATA.length > 0) {
+            updateInfoContent(CASES_DATA[0]);
+            updateArrows();
+        }
+
+        var touchStartX = 0;
+        imagesContainer.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+        imagesContainer.addEventListener('touchend', function(e) {
+            var diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) slideToIndex(currentIndex + 1);
+                else slideToIndex(currentIndex - 1);
+            }
+        }, { passive: true });
     })();
     </script>
 
